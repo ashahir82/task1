@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.btn {
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+input[type=button], input[type=submit], input[type=reset] {
+    cursor: pointer;
+}
+
+.success {background-color: MediumSeaGreen; color: white;} /* Green */
+.primary {background-color: DodgerBlue; color: white;} /* Blue */
+.danger {background-color: Tomato; color: white;} /* Red */
+.warning {background-color: Orange; color: white;} /* Orange */
+.secondary {background-color: LightGray; color: black;} /* Gray */
+.disable {background-color: Gray; color: black;} /* Black */
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table td, .table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.noborder td, .noborder th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+input[type=text],input[type=number] , select, textarea {
+    width: 95%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
