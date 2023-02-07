@@ -42,7 +42,7 @@ $result = mysqli_query($conn, $sql);
                     while($row = mysqli_fetch_assoc($result)) {
                         echo "<tr><td>" . $listrow . "</td><td>";
                         if (!empty($row["avatar"])) {
-                            echo "<img src='" . $row["avatar"]. "' alt='avatar_" . $row["avatar"]. "' height='50' width='50'>";
+                            echo "<img src='images/files/" . $row["avatar"]. "' alt='avatar_" . $row["avatar"]. "' height='50' width='50'>";
                         } elseif ($row["gander"] == "Lelaki") {
                             echo "<img src='images/male.png' alt='avatar_male' height='50' width='50'>";
                         } elseif ($row["gander"] == "Perempuan") {

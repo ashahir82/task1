@@ -2,7 +2,10 @@
 include 'core/db.php';
 include 'core/function.php';
 
+$uploadDir = 'images/files/'; 
+$allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'bmp'); 
 $mode_allowed = array('edit', 'add', 'delete');
+
 if (isset($_GET['mode']) === true && in_array($_GET['mode'], $mode_allowed) === true) {
 	if ($_GET['mode'] === 'edit') {
 		if (isset($_GET['id']) === true && empty($_GET['id']) === false ) {
@@ -71,6 +74,36 @@ if (empty($_POST) === false) {
 				$errors[] = 'Umur hanya mengandungi nombor sahaja.';
 			}
 		}
+
+        $img = str_replace(" ", "_", $_FILES['file']['name']);
+        $tmp = $_FILES['file']['tmp_name'];
+
+        $uploadStatus = 1;
+        $uploadedFile = ''; 
+        if(!empty($_FILES['file']['name'])){ 
+            $fileName = basename($img); 
+            $targetFilePath = $uploadDir . $img; 
+            $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION)); 
+
+            if(in_array($fileType, $allowTypes)){
+                if($_FILES['file']['size'] > 3000000){
+                    $uploadStatus = 0;
+                    $response['message'] = 'Maaf, saiz fail dibenarkan tidak lebih 3Mb.'; 
+                } else {
+                    if(move_uploaded_file($tmp, $targetFilePath)){ 
+                        $uploadedFile = $fileName;
+                    } else { 
+                        $uploadStatus = 0;
+                        $response['message'] = 'Maaf, terdapat ralat semala muat-naik.'; 
+                    } 
+                }
+            } else { 
+                $uploadStatus = 0;
+                $response['message'] = 'Maaf, hanya fail '.implode('/', $allowTypes).' dibenarkan muat-naik.'; 
+            }
+        } elseif (empty($_FILES['file']['name']) && $_GET['mode'] === 'edit') {
+            $uploadedFile = $row['avatar'];
+        }
 	}
 }
 ?>
@@ -90,29 +123,21 @@ if (empty($_POST) === false) {
     <h1>Daftar Pengguna</h1>
     <?php	
 		if (empty($_POST) === false && empty($errors) === true) {
+            $update_data = array(
+                'name' => $_POST['name'],
+                'noic' => $_POST['noic'],
+                'age' => $_POST['age'],
+                'gander' => $_POST['gander'],
+                'avatar' => $uploadedFile
+            );
 			if ($_GET['mode'] === 'edit') {
-				$update_data = array(
-					'name' => $_POST['name'],
-					'noic' => $_POST['noic'],
-					'age' => $_POST['age'],
-					'gander' => $_POST['gander'],
-					'avatar' => $_POST['avatar']
-				);
 				foreach ($update_data as $field=>$data) {
                     $update[] = '`' . $field . '` = \'' . $data . '\'';
                 }
                 mysqli_query( $conn, "UPDATE `users` SET " . implode(', ',$update) . " WHERE `id` = '" .$id . "'");
 			} else if ($_GET['mode'] === 'add') {
-				$add_data = array(
-					'name' => $_POST['name'],
-					'noic' => $_POST['noic'],
-					'age' => $_POST['age'],
-					'gander' => $_POST['gander'],
-					'avatar' => $_POST['avatar']
-				);
-                                
-                $fields = '`' . implode('`, `', array_keys($add_data)) . '`';
-                $data = '\'' . implode('\', \'', $add_data) . '\'';
+                $fields = '`' . implode('`, `', array_keys($update_data)) . '`';
+                $data = '\'' . implode('\', \'', $update_data) . '\'';
                 
                 mysqli_query( $conn, "INSERT INTO `users` ($fields) VALUES ($data)");
 			}
@@ -123,15 +148,15 @@ if (empty($_POST) === false) {
 			echo '<ul><li>' . implode('</li><li>', $errors) . '</li></ul>';
 		}
 	?>
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         <table class="table noborder">
             <tr>
                 <td>Nama</td>
                 <td><input type="text" id="name" name="name" value="<?php if (empty($errors) === true && $_GET['mode'] === 'edit'){ echo $row['name']; } else if (empty($errors) === false && empty($_POST) === false) { echo $_POST['name']; } ?>"></td>
                 <td rowspan="4">
                     <p>Avatar</p>
-                    <p><img src="<?php if (empty($errors) === true && $_GET['mode'] === 'edit'){ if (!empty($row["avatar"])) { echo $row["avatar"]; } elseif ($row["gander"] == "Lelaki") { echo "images/male.png"; } elseif ($row["gander"] == "Perempuan") { echo "images/female.png"; } else { echo "images/no-photo.png"; } } else if ($_GET['mode'] === 'add') { echo "images/no-photo.png"; } ?>" alt="avatar" height="100" width="100"></p>
-                    <input type="file" id="myfile" name="myfile">
+                    <p><img src="<?php if (empty($errors) === true && $_GET['mode'] === 'edit'){ if (!empty($row["avatar"])) { echo "images/files/" . $row["avatar"]; } elseif ($row["gander"] == "Lelaki") { echo "images/male.png"; } elseif ($row["gander"] == "Perempuan") { echo "images/female.png"; } else { echo "images/no-photo.png"; } } else if ($_GET['mode'] === 'add') { echo "images/no-photo.png"; } ?>" alt="avatar" height="100" width="100"></p>
+                    <input type="file" id="file" name="file">
                 </td>
             </tr>
             <tr>
