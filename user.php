@@ -14,10 +14,25 @@ if (isset($_GET['mode']) === true && in_array($_GET['mode'], $mode_allowed) === 
 				$errors[] = 'Harap maaf, pengguna tidak wujud.';
 			}
 		} else {
-			$errors[] = 'Harap maaf, id pengguna tidak wujud.';
+			$errors[] = 'Harap maaf, pengguna tidak wujud.';
 		}
 	} else if ($_GET['mode'] === 'delete') {
-		
+		if (isset($_GET['id']) === true && empty($_GET['id']) === false ) {
+			$id = $_GET['id'];
+            $query = mysqli_query($conn, "SELECT COUNT(`id`) FROM `users` WHERE `id` = '$id'");
+			if (mysqli_result($query, 0) == 1) {
+				$delete = mysqli_query($conn, "DELETE FROM `users` WHERE `id` = '$id'");
+			} else {
+				$errors[] = 'Harap maaf, pengguna tidak wujud.';
+			}
+			
+			if($delete) {
+				echo '<META HTTP-EQUIV="refresh" content="0;URL=index.php">'; 
+				exit();
+			}
+		} else {
+			$errors[] = 'Harap maaf, pengguna tidak wujud.';
+		}
 	}
 } else {
     echo '<META HTTP-EQUIV="refresh" content="0;URL=index.php">'; 

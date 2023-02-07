@@ -48,7 +48,7 @@ $result = mysqli_query($conn, $sql);
                         } elseif ($row["gander"] == "Perempuan") {
                             echo "<img src='images/female.png' alt='avatar_female' height='50' width='50'>";
                         }
-                        echo "</td><td>" . $row["name"]. "</td><td>" . $row["noic"]. "</td><td>" . $row["age"]. "</td><td>" . $row["gander"]. "</td><td><a class='btn warning' href='user.php?mode=edit&id=" . $row["id"]. "'>Sunting</a><a class='btn danger' href='user.php?mode=delete&id=" . $row["id"]. "'>Padam</a></td></tr>";
+                        echo '</td><td>' . $row["name"]. '</td><td>' . $row["noic"]. '</td><td>' . $row["age"]. '</td><td>' . $row["gander"]. '</td><td><a class="btn warning" href="user.php?mode=edit&id=' . $row['id'] . '">Sunting</a> <a class="btn danger" href="user.php?mode=delete&id=' . $row['id'] . '" onclick="return confirm(\'Anda pasti untuk memadam maklumat ini?\')">Padam</a></td></tr>';
                         $listrow += 1;
                     }
                 } else {
