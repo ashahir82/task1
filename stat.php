@@ -40,6 +40,7 @@ include 'core/function.php';
     <p><small>Statistik Pengguna Mengikut Kategori Umur.</small></p>
     <table class="table">
         <tr class="disable">
+            <th>0-9</th>
             <th>10-19</th>
             <th>20-29</th>
             <th>30-39</th>
@@ -68,7 +69,7 @@ include 'core/function.php';
             if (mysqli_num_rows($query) != 0) {
                 $x = 1;
                 while (($row = mysqli_fetch_assoc($query)) != false) {
-                    while ($x <= 9) {
+                    while ($x <= 10) {
                         if ($x == $row['range']) {
                             echo '<td>' . $row['ageT'] . '</td>';
                             $x++;
@@ -79,14 +80,14 @@ include 'core/function.php';
                         }
                     }
                 }
-                if ($x <= 9) {
-                    while ($x <= 9) {
+                if ($x <= 10) {
+                    while ($x <= 10) {
                         echo '<td></td>';
                         $x++;
                     }
                 }
             } else {
-                echo '<tr><td colspan="2">Tiada maklumat ditemui</td></tr>';
+                echo '<tr><td colspan="10">Tiada maklumat ditemui</td></tr>';
             }
         ?>
     </table>
