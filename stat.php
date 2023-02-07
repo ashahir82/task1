@@ -91,5 +91,27 @@ include 'core/function.php';
             }
         ?>
     </table>
+    <p><small>Statistik Pengguna Mengikut Gambar.</small></p>
+    <table class="table">
+        <tr class="disable">
+            <th>Gambar</th>
+            <th>Bilangan</th>
+        </tr>
+        <?php
+            $query = mysqli_query($conn, "SELECT CASE
+            WHEN `avatar` <> '' THEN 'Ada Gambar'
+            WHEN `avatar` = '' THEN 'Tiada Gambar'
+            END AS `range`,
+            COUNT(`id`) as `ageT`
+            FROM `users` GROUP BY `range` ORDER BY `range`");
+            if (mysqli_num_rows($query) != 0) {
+                while (($row = mysqli_fetch_assoc($query)) != false) {
+                    echo '<tr><td>' . $row['range'] . '</td><td>' . $row['ageT'] . '</td></tr>';
+                }
+            } else {
+                echo '<tr><td colspan="2">Tiada maklumat ditemui</td></tr>';
+            }
+        ?>
+    </table>
 </body>
 </html>
